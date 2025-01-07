@@ -5,8 +5,6 @@ import org.example.kata311.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,11 +24,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers(Integer limit) {
-        return userDao
-                .findAll()
-                .stream()
-                .limit(limit)
-                .toList();
+        if (limit != null) {
+            return userDao
+                    .findAll()
+                    .stream()
+                    .limit(limit)
+                    .toList();
+        }
+        return getUsers();
     }
 
     @Override
@@ -40,13 +41,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Long createUser(User user) {
-        return userDao.save(user);
+    public void createUser(String name, String email, String password) {
+        User user = new User(name, password, email);
+        Long id = userDao.save(user);
+        System.out.println("User has been created, id: " + id);
     }
 
     @Transactional
     @Override
-    public void updateUser(User user) {
+    public void updateUser(Long id, String name, String email, String password) {
+        User user = userDao.findById(id);
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
         userDao.update(user);
     }
 
