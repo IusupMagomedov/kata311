@@ -26,15 +26,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers(Integer limit) {
-        List<User> users = getUsers();
-        if (limit == null || limit > users.size() || limit <= 0) {
-            limit = users.size();
-        }
-        List<User> resultUsers = new ArrayList<User>();
-        for (int i = 0; i < limit; i++) {
-            resultUsers.add(users.get(i));
-        }
-        return resultUsers;
+        return userDao
+                .findAll()
+                .stream()
+                .limit(limit)
+                .toList();
     }
 
     @Override
