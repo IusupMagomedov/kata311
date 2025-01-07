@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
                     .limit(limit)
                     .toList();
         }
-        return getUsers();
+        return userDao.findAll();
     }
 
     @Override
